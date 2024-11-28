@@ -1,16 +1,14 @@
 package com.example.foodDelivery.dao;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "users")
 @Builder
 @AllArgsConstructor
 @Getter
+@Setter
 @NoArgsConstructor
 public class UserEntity {
     @Id
@@ -27,5 +25,5 @@ public class UserEntity {
     private String phoneNumber;
 
     @Column(nullable = false)
-    private String userType;
+    private UserType userType;
 }

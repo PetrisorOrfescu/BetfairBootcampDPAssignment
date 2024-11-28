@@ -1,5 +1,6 @@
 package com.example.foodDelivery.dto;
 
+import com.example.foodDelivery.dao.UserType;
 import lombok.*;
 
 @Getter
@@ -13,4 +14,6 @@ public class UserDto {
     private String mail;
 
     private String phoneNumber;
+
+    private UserType userType;
 }
