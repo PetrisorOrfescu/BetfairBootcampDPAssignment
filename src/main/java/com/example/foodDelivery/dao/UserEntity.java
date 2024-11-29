@@ -25,5 +25,6 @@ public class UserEntity {
     private String phoneNumber;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private UserType userType;
 }

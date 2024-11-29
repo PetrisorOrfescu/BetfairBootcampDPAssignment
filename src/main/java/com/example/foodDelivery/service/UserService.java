@@ -45,11 +45,12 @@ public class UserService {
     }
 
     public boolean updateUser(UserDto userDto) throws ResourceNotFoundException {
-        if (userRepository.findByPhoneNumber(userDto.getPhoneNumber()).isEmpty()) {
+        Optional<UserEntity> existingUser = userRepository.findByPhoneNumber(userDto.getPhoneNumber());
+        if (existingUser.isEmpty()) {
             throw new ResourceNotFoundException(String.format("User with Phone Number %s does not exist", userDto.getPhoneNumber()));
         } else {
             UserEntity userToUpdate = UserConverter.dtoToEntity(userDto);
-            userToUpdate.setId(userRepository.findByPhoneNumber(userDto.getPhoneNumber()).get().getId());
+            userToUpdate.setId(existingUser.get().getId());
             userRepository.save(userToUpdate);
             return true;
         }
