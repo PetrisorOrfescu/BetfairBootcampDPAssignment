@@ -35,6 +35,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(CanNotRemoveItemFromConfirmedOrCanceledOrderException.class)
+    public ResponseEntity<ErrorResponseDto> handleCanNotRemoveItemFromConfirmedOrderException(CanNotRemoveItemFromConfirmedOrCanceledOrderException exception, WebRequest webRequest) {
+        ErrorResponseDto errorResponseDTO = new ErrorResponseDto(
+                webRequest.getDescription(false),
+                HttpStatus.BAD_REQUEST,
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleGlobalException(Exception exception, WebRequest webRequest) {
         ErrorResponseDto errorResponseDTO = new ErrorResponseDto(

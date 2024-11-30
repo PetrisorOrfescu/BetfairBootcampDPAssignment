@@ -11,6 +11,7 @@ public abstract class DishDecorator implements Dish {
     public String getDescription() {
         return dish.getDescription();
     }
+
     @Override
     public double getCost() {
         return dish.getCost();

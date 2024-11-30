@@ -4,7 +4,7 @@ import com.example.foodDelivery.dao.UserEntity;
 import com.example.foodDelivery.dto.UserDto;
 
 public class UserConverter {
-    public static UserEntity dtoToEntity(UserDto userDto){
+    public static UserEntity dtoToEntity(UserDto userDto) {
         return UserEntity.builder()
                 .name(userDto.getName())
                 .mail(userDto.getMail())

@@ -1,17 +1,15 @@
 package com.example.foodDelivery.dishLogic;
 
-public class BasicPizza implements Dish{
-    private final String description = "Basic Pizza";
-    private final double cost = 8.0;
+public class BasicPizza implements Dish {
 
 
     @Override
     public String getDescription() {
-        return description;
+        return "Basic Pizza";
     }
 
     @Override
     public double getCost() {
-        return cost;
+        return 8.0;
     }
 }

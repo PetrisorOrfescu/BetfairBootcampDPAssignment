@@ -3,6 +3,7 @@ package com.example.foodDelivery.controller;
 import com.example.foodDelivery.constants.OrderConstants;
 import com.example.foodDelivery.dto.OrderDto;
 import com.example.foodDelivery.dto.ResponseDto;
+import com.example.foodDelivery.exception.CanNotRemoveItemFromConfirmedOrCanceledOrderException;
 import com.example.foodDelivery.exception.ResourceNotFoundException;
 import com.example.foodDelivery.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -57,5 +58,37 @@ public class OrderController {
                     .status(HttpStatus.EXPECTATION_FAILED)
                     .body(new ResponseDto(OrderConstants.STATUS_417, OrderConstants.MESSAGE_417_CANCEL));
         }
+    }
+
+    @PutMapping("/addPizza")
+    public ResponseEntity<ResponseDto> addPizzaToOrder(@RequestParam Long orderId, @RequestParam Boolean extraCheese) throws ResourceNotFoundException {
+
+        boolean addedToOrder = orderService.addPizzaToOrder(orderId, extraCheese);
+        if (addedToOrder) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new ResponseDto(OrderConstants.STATUS_200, OrderConstants.MESSAGE_200));
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.EXPECTATION_FAILED)
+                    .body(new ResponseDto(OrderConstants.STATUS_417, OrderConstants.MESSAGE_417_ADD_TO_ORDER));
+        }
+
+    }
+
+    @PutMapping("/removeFromOrder")
+    public ResponseEntity<ResponseDto> removeItemFromOrder(@RequestParam Long orderId, @RequestParam Long itemId) throws ResourceNotFoundException, CanNotRemoveItemFromConfirmedOrCanceledOrderException {
+
+        boolean addedToOrder = orderService.removeFromOrder(orderId, itemId);
+        if (addedToOrder) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new ResponseDto(OrderConstants.STATUS_200, OrderConstants.MESSAGE_200));
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.EXPECTATION_FAILED)
+                    .body(new ResponseDto(OrderConstants.STATUS_417, OrderConstants.MESSAGE_417_REMOVE_FROM_ORDER));
+        }
+
     }
 }
