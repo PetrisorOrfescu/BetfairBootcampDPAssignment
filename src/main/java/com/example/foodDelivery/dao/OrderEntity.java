@@ -1,8 +1,10 @@
 package com.example.foodDelivery.dao;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -10,14 +12,18 @@ import java.util.List;
 @Table(name = "orders")
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity user;
+    private Long userId;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
 
     @ElementCollection
     @CollectionTable(name = "order_dishes", joinColumns = @JoinColumn(name = "order_id"))

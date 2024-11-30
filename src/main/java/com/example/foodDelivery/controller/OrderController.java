@@ -3,14 +3,14 @@ package com.example.foodDelivery.controller;
 import com.example.foodDelivery.constants.OrderConstants;
 import com.example.foodDelivery.dto.OrderDto;
 import com.example.foodDelivery.dto.ResponseDto;
+import com.example.foodDelivery.exception.ResourceNotFoundException;
 import com.example.foodDelivery.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
@@ -20,9 +20,42 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/create")
-    public ResponseEntity<ResponseDto> createOrder(@RequestBody OrderDto orderDto){
-        orderService.createOrder(orderDto);
+    public ResponseEntity<ResponseDto> createOrder(@RequestParam String customerPhoneNumber) throws ResourceNotFoundException {
+        orderService.createOrder(customerPhoneNumber);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseDto(OrderConstants.STATUS_201, OrderConstants.MESSAGE_201));
+    }
+
+    @GetMapping("/all")
+    public List<OrderDto> getOrdersForUserPhoneNumber(@RequestParam String customerPhoneNumber) throws ResourceNotFoundException {
+        return orderService.getOrderByPhoneNumber(customerPhoneNumber);
+    }
+
+    @PutMapping("/confirm")
+    public ResponseEntity<ResponseDto> confirmOrder(@RequestParam Long orderId, @RequestParam String confirmationMethod) throws ResourceNotFoundException {
+        boolean isConfirmed = orderService.confirmOrder(orderId, confirmationMethod);
+        if (isConfirmed) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new ResponseDto(OrderConstants.STATUS_200, OrderConstants.MESSAGE_200));
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.EXPECTATION_FAILED)
+                    .body(new ResponseDto(OrderConstants.STATUS_417, OrderConstants.MESSAGE_417_UPDATE));
+        }
+    }
+
+    @PutMapping("/cancel")
+    public ResponseEntity<ResponseDto> cancelOrder(@RequestParam Long orderId) throws ResourceNotFoundException {
+        boolean isCanceled = orderService.cancelOrder(orderId);
+        if (isCanceled) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new ResponseDto(OrderConstants.STATUS_200, OrderConstants.MESSAGE_200));
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.EXPECTATION_FAILED)
+                    .body(new ResponseDto(OrderConstants.STATUS_417, OrderConstants.MESSAGE_417_CANCEL));
+        }
     }
 }
